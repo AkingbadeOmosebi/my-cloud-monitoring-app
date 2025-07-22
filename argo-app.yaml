@@ -1,0 +1,23 @@
+# This defines my ArgoCD app: pulls manifests from my GitHub repo, syncs to my EKS cluster, you can also do it console or manual approahcv too.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-cloud-monitoring-app   # This is the name of my ArgoCD app
+  namespace: argocd               # Must match ArgoCD namespace we created earlier
+spec:
+  project: default
+
+  source:
+    repoURL: 'https://github.com/AkingbadeOmosebi/my-cloud-monitoring-app'  # My GitHub repo
+    targetRevision: HEAD              # Branch to track (HEAD = default branch)
+    path: manifests               # Path to my k8s manifests (deployment and service.yaml) folder inside repo
+
+  destination:
+    server: 'https://kubernetes.default.svc'  # EKS cluster endpoint inside ArgoCD
+    namespace: default
+
+  syncPolicy:           # This is where it syncs every deployyment
+    automated:
+      prune: true       # Remove old resources if not in Git anymore
+      selfHeal: true    # Revert drift automatically,
