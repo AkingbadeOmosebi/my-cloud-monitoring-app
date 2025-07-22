@@ -10,31 +10,30 @@ A simple Python Flask web app that monitors system metrics using `psutil` contai
 
 ## 🗂️ Project Structure
 
+## 🗂️ Project Structure
+
+```plaintext
 my-cloud-monitoring-app/
 ├── Dockerfile
 ├── requirements.txt
-├── app.py # Your Flask app
-├── templates/ # HTML templates (if any)
-├── static/ # CSS, images, JS (if any)
-├── manifests/ # Kubernetes manifests
-│ ├── deployment.yaml
-│ ├── service.yaml
-│ ├── argo-app.yaml
-├── terraform/ # Infra-as-Code config
-│ ├── main.tf
-│ ├── variables.tf
-│ ├── outputs.tf
-│ ├── provider.tf
-│ ├── ...
-├── docs/ # Diagrams, screenshots
-│ ├── architecture.png
-│ ├── ...
+├── app.py                   # Flask app main file
+├── templates/               # HTML templates (if any)
+├── static/                  # CSS, JS, images (if any)
+├── manifests/               # Kubernetes manifests
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── argo-app.yaml
+├── terraform/               # Infrastructure as Code (Terraform)
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   ├── provider.tf
+│   ├── ...
+├── docs/                    # Diagrams, architecture, screenshots
+│   ├── architecture.png
+│   ├── ...
 ├── .gitignore
 ├── README.md
-
-markdown
-Copy
-Edit
 
 
 **Main flow:**  
