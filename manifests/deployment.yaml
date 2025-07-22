@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-monitoring-app
+  labels:
+    app: python-monitoring-app
+spec:
+  replicas: 2  # Running 2 copies so it’s reliable and handles load
+  selector:
+    matchLabels:
+      app: python-monitoring-app
+  template:
+    metadata:
+      labels:
+        app: python-monitoring-app
+    spec:
+      containers:
+      - name: monitoring-app
+        image: 194722436853.dkr.ecr.eu-central-1.amazonaws.com/my-cloud-app-repo:latest  # My ECR image URL
+        ports:
+        - containerPort: 5000  # The port my Flask app listens on inside the container
+        env:
+        - name: FLASK_RUN_HOST
+          value: "0.0.0.0"  # Make flask listen on all interfaces, not just localhost
+        resources:
+          requests:
+            memory: "128Mi"  # I added these section, as i want to define the constraint of minimum resources which should be reserve for this container
+            cpu: "100m"
+          limits:
+            memory: "256Mi"  #  maxx resources container can use so it doesnnt hog a lot of cluster memories and slow down the system!!!
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-monitoring-service
+spec:
+  selector:
+    app: python-monitoring-app  # tHIS will liink service to pods with this label
+  ports:
+  - protocol: TCP
+    port: 80         # External port people hit to reach the app
+    targetPort: 5000 # Internal port your app listens on (fix from 8080)
+  type: LoadBalancer # AWS will spin up a real load balancer for me

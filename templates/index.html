@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Cloud Native Monitoring App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+        /* Minimal overrides for demo, keep most styling in style.css */
+        .gauge {
+            width: 320px;
+            height: 320px;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            cursor: default;
+            text-align: center;
+        }
+        svg {
+            width: 250px;
+            height: 250px;
+            margin-bottom: 15px;
+        }
+        svg circle {
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.7s ease, stroke 0.5s ease;
+        }
+        svg text {
+            font-weight: 300;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            fill: currentColor;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cloud Native Monitoring Dashboard</h1>
+
+    <div id="view-selector">
+        <button onclick="setView(1)">Text View</button>
+        <button onclick="setView(2)">Bar View</button>
+        <button onclick="setView(3)">Gauge View</button>
+    </div>
+
+    <div class="gauges">
+        <div id="cpu-gauge" class="gauge">CPU Usage</div>
+        <div id="mem-gauge" class="gauge">Memory Usage</div>
+    </div>
+
+    <p id="alert-message"></p>
+
+    <script>
+        let currentView = 1;
+
+        function setView(view) {
+            currentView = view;
+            updateGauges();
+        }
+
+        function getColorClass(value) {
+            if (value < 40) return 'green';
+            if (value < 60) return 'blue';
+            if (value < 80) return 'yellow';
+            return 'red';
+        }
+
+        function updateGauges() {
+            fetch('/metrics')
+                .then(response => response.json())
+                .then(data => {
+                    let cpuDiv = document.getElementById('cpu-gauge');
+                    let memDiv = document.getElementById('mem-gauge');
+                    let messageP = document.getElementById('alert-message');
+
+                    // remove all color classes first
+                    cpuDiv.classList.remove('green', 'blue', 'yellow', 'red');
+                    memDiv.classList.remove('green', 'blue', 'yellow', 'red');
+
+                    // add based on value
+                    cpuDiv.classList.add(getColorClass(data.cpu));
+                    memDiv.classList.add(getColorClass(data.memory));
+
+                    if (currentView === 1) {
+                        cpuDiv.innerHTML = `CPU Usage: ${data.cpu.toFixed(1)}%`;
+                        memDiv.innerHTML = `Memory Usage: ${data.memory.toFixed(1)}%`;
+                    } else if (currentView === 2) {
+                        cpuDiv.innerHTML = `
+                            CPU Usage:<br>
+                            <progress value="${data.cpu}" max="100"></progress><br>
+                            ${data.cpu.toFixed(1)}%
+                        `;
+                        memDiv.innerHTML = `
+                            Memory Usage:<br>
+                            <progress value="${data.memory}" max="100"></progress><br>
+                            ${data.memory.toFixed(1)}%
+                        `;
+                    } else if (currentView === 3) {
+                        const circumference = 2 * Math.PI * 75; // circle radius 75
+                        const cpuDash = (data.cpu / 100) * circumference;
+                        const memDash = (data.memory / 100) * circumference;
+
+                        cpuDiv.innerHTML = `
+                            <svg viewBox="0 0 150 150" role="img" aria-label="CPU usage gauge">
+                                <circle cx="75" cy="75" r="75" fill="#2e2e42" />
+                                <circle
+                                    cx="75" cy="75" r="75"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="15"
+                                    stroke-dasharray="${cpuDash} ${circumference}"
+                                    stroke-dashoffset="${circumference}"
+                                    transform="rotate(-90 75 75)"
+                                />
+                                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">${data.cpu.toFixed(1)}%</text>
+                                <text x="50%" y="85%" dominant-baseline="middle" text-anchor="middle" font-size="0.6rem" fill="#aaa">CPU</text>
+                            </svg>
+                        `;
+
+                        memDiv.innerHTML = `
+                            <svg viewBox="0 0 150 150" role="img" aria-label="Memory usage gauge">
+                                <circle cx="75" cy="75" r="75" fill="#2e2e42" />
+                                <circle
+                                    cx="75" cy="75" r="75"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="15"
+                                    stroke-dasharray="${memDash} ${circumference}"
+                                    stroke-dashoffset="${circumference}"
+                                    transform="rotate(-90 75 75)"
+                                />
+                                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">${data.memory.toFixed(1)}%</text>
+                                <text x="50%" y="85%" dominant-baseline="middle" text-anchor="middle" font-size="0.6rem" fill="#aaa">Memory</text>
+                            </svg>
+                        `;
+                    }
+
+                    if (data.message) {
+                        messageP.innerText = data.message;
+                    } else {
+                        messageP.innerText = '';
+                    }
+                })
+                .catch(() => {
+                    // Handle fetch errors gracefully
+                    document.getElementById('alert-message').innerText = "Error fetching metrics.";
+                });
+        }
+
+        // initial load + periodic update
+        updateGauges();
+        setInterval(updateGauges, 5000);
+    </script>
+</body>
+</html>

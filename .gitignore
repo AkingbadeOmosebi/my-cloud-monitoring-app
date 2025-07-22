@@ -1,0 +1,35 @@
+# I am using this git ignore so git doesnt add all thee files that are not needed to be added to the repo, esp a public repo
+
+# === Terraform ===
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# === Docker ===
+*.env
+
+# == System files ==
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === Misc ===
+*.bak
