@@ -1,6 +1,5 @@
-# =============================================
-# VPC MODULE — pulls official VPC config
-# =============================================
+
+# VPC MODULE, you can get it from thee official VPC config
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -21,9 +20,7 @@ module "vpc" {
   }
 }
 
-# =============================================
-# EKS MODULE — pulls official EKS config
-# =============================================
+# EKS MODULE: likewise this one too, it pulls from its official EKS config
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -47,7 +44,7 @@ module "eks" {
     }
   }
 
-  # ✅ Fixed access entry — uses policy associations instead of system groups
+  # I finally fixed the access issue, as it wasn't recognizing the my iAM user ARN
   access_entries = {
     admin-user = {
       kubernetes_username = "Ak_DevOps"
