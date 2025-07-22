@@ -1,4 +1,4 @@
-# This defines my ArgoCD app: pulls manifests from my GitHub repo, syncs to my EKS cluster, you can also do it console or manual approahcv too.
+# This defines my ArgoCD app: pulls manifests from my GitHub repo, syncs to my EKS cluster, you can also do it console or manual approach too.
 
 apiVersion: argoproj.io/v1alpha1
 kind: Application
