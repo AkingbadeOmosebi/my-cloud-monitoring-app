@@ -1,12 +1,41 @@
 # ☁️ Python Cloud-Native Monitoring App on EKS 🚀
 
-A simple Python Flask web app that monitors system metrics using `psutil` — containerized with Docker, pushed to AWS ECR, deployed to EKS with Terraform, and managed via ArgoCD for GitOps-style continuous delivery.
+A simple Python Flask web app that monitors system metrics using `psutil` containerized with Docker, pushed to AWS ECR, deployed to EKS with Terraform, and managed via ArgoCD for GitOps-style continuous delivery.
 
 ---
 
 ## 🗺️ Architecture
 
-![Architecture Diagram](./path/to/your/diagram.png)
+![Architecture Diagram](./architecture/diagram.png)
+
+## 🗂️ Project Structure
+
+my-cloud-monitoring-app/
+├── Dockerfile
+├── requirements.txt
+├── app.py # Your Flask app
+├── templates/ # HTML templates (if any)
+├── static/ # CSS, images, JS (if any)
+├── manifests/ # Kubernetes manifests
+│ ├── deployment.yaml
+│ ├── service.yaml
+│ ├── argo-app.yaml
+├── terraform/ # Infra-as-Code config
+│ ├── main.tf
+│ ├── variables.tf
+│ ├── outputs.tf
+│ ├── provider.tf
+│ ├── ...
+├── docs/ # Diagrams, screenshots
+│ ├── architecture.png
+│ ├── ...
+├── .gitignore
+├── README.md
+
+markdown
+Copy
+Edit
+
 
 **Main flow:**  
 Flask app ➜ Docker ➜ ECR ➜ EKS ➜ Load Balancer ➜ ArgoCD ➜ GitHub Repo ➜ Continuous Deployment
