@@ -12,7 +12,7 @@ Simple Python Flask monitoring app:
 ## ⚙️ How To Use
 
 1. **Devlop Application**
-    <any similar or any application of your choice>
+    #any similar or any application of your choice
 
 2. **Build & Push Image**
    ```bash
@@ -20,13 +20,16 @@ Simple Python Flask monitoring app:
    # Tag and push to ECR
 
 3. **Provision your choice of infra**
-    ```terraform init
+    ```
+        terraform init
         terraform plan
-    `   terraform apply
+        terraform apply
 
-4. **Deploy APp**
-    ```kubectl apply -f deployment.yaml
-       kubectl apply -f service.yaml
+4. **Deploying App**
+    ```
+        kubectl apply -f deployment.yaml
+    ```
+        kubectl apply -f service.yaml
 
 
 5. **Configure GitOps with ArgoCD**
@@ -39,7 +42,8 @@ Simple Python Flask monitoring app:
     Sync & manage deployments.
 
     **🧹 Clean Code**
-    Cluster state in EKS.
-    Infra tracked in Terraform. 
-    ```terraform destroy -auto-approve
-    
+     
+    ```
+        terraform destroy -auto-approve
+    # Cluster state in EKS.
+    # Infra tracked in Terraform.
